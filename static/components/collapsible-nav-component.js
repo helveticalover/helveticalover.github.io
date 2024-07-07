@@ -1,3 +1,4 @@
+(function() {
 const template = document.createElement('template');
 template.innerHTML = 
 `<style>
@@ -171,3 +172,4 @@ class CollapsibleNav extends HTMLElement {
 }
 
 customElements.define("collapsible-nav", CollapsibleNav);
+})();

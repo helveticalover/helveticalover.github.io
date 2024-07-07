@@ -1,3 +1,4 @@
+(function() {
 const template = document.createElement('template');
 template.innerHTML = 
 `<style>
@@ -158,3 +159,4 @@ class ModalComponent extends HTMLElement {
 }
 
 customElements.define("popup-modal", ModalComponent);
+})();
