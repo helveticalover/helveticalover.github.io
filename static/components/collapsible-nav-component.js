@@ -1,6 +1,12 @@
 const template = document.createElement('template');
 template.innerHTML = 
 `<style>
+.center {
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+    width: 100%;
+}
 .header {
     margin: 0;
     padding: 25.5px;
@@ -45,62 +51,37 @@ template.innerHTML =
 nav {
     margin: 10px 0px 20px 0px;
 }
-nav ul {
+.nav {
     padding: 0px;
     margin: 0px;
 }
-nav li {
-    display: inline;
-}
-nav a {
-    display: inline-block;
-    margin: 4px 2px;
-}
-nav .button {
-    padding: 6px 18px;
-}
 
-@media only screen and (max-width: 768px) {
-    .header {
-        position: fixed;
-        width: 100%;
-        padding: 0px;
-        top: 0px;
-    }
-    .banner {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 5px 20px;
-    }
-    nav {
-        margin: 0px;
-    }
-    nav a {
-        margin: 4px 0px;
-    }
-    nav ul {
-        margin: 0px 0px 10px 0px;
-    }
-    nav .button {
-        border-radius: 0px;
-    }
-    .nav li {
-        display: inline-block;
-        width: 100%;
-    }
-    .mobile-expand-lbl {
-        display: block;
-        top: 2px;
-        position: relative;
-        float: right;
-    }
-    #mobile-expand-content {
-        max-height: 0px;
-    }
-    .nav a {
-        width: 100%;
-    }
+.collapsed.header {
+    position: fixed;
+    width: 100%;
+    padding: 0px;
+    top: 0px;
+}
+.collapsed .banner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px 20px;
+}
+.collapsed nav {
+    margin: 0px;
+}
+.collapsed .nav {
+    margin: 0px 0px 10px 0px;
+}
+.collapsed .mobile-expand-lbl {
+    display: block;
+    top: 2px;
+    position: relative;
+    float: right;
+}
+.collapsed #mobile-expand-content {
+    max-height: 0px;
 }
 </style>
 <div class="header">
@@ -117,50 +98,62 @@ nav .button {
         </div>
       </div>
       <div id="mobile-expand-content">
-        <ul class="nav" id="id_nav">
+        <div class="nav" id="id_nav">
         <slot></slot>
-        </ul>
+        </div>
       </div>
     </nav>
 </div>`
 
-const liTemplate = document.createElement('template');
-liTemplate.innerHTML =
-`<li><a><div class="button"></div></a></li>`;
-
 class CollapsibleNav extends HTMLElement {
+    static get observedAttributes() {
+        return ['collapse-width'];
+    }
+  
     constructor() {
         super();
 
         this._onScroll = this._onScroll.bind(this);
+        this._onResize = this._onResize.bind(this);
 
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         this._navRoot = this.shadowRoot.querySelector('.header');
         this._navCollapsible = this.shadowRoot.querySelector('.mobile-expand');
-
-        Promise.all([
-            customElements.whenDefined('collapsible-nav-li'),
-          ])
-            .then(_ => this._populateNav());
+        this._setCollapseWidth(this.getAttribute("collapse-width"));
     }
 
     connectedCallback() {
         this._prevScrollPosition = window.scrollY;
 
         window.addEventListener("scroll", this._onScroll);
+        window.addEventListener("resize", this._onResize);
     }
+
+    attributeChangedCallback() {
+        this._setCollapseWidth(this.getAttribute("collapse-width"));
+      }
 
     disconnectedCallback() {
         window.removeEventListener("scroll", this._onScroll);
+        window.removeEventListener("resize", this._onResize);
     }
 
-    _populateNav() {
-        let lis = Array.from(this.querySelectorAll('collapsible-nav-li'));
-        lis.forEach((li) => {
-            li._populateHtml();
-        });
+    _setCollapseWidth(value) {
+        this._collapseWidth = Number(value);
+        this._onResize();
+    }
+
+    _onResize() {
+        if (window.innerWidth <= this._collapseWidth)
+        {
+            this._navRoot.classList.add("collapsed");
+        }
+        else
+        {
+            this._navRoot.classList.remove("collapsed");
+        }
     }
 
     _onScroll() {
@@ -178,78 +171,3 @@ class CollapsibleNav extends HTMLElement {
 }
 
 customElements.define("collapsible-nav", CollapsibleNav);
-
-class CollapsibleNavLi extends HTMLElement {
-    static observedAttributes = ["href", "active"];
-
-    constructor() {
-        super();
-    }
-
-    attributeChangedCallback() {
-        if (!this._buttonDiv || !this._link)
-        {
-            return;
-        }
-
-        this._link.href = href;
-
-        if (active)
-        {
-          this._buttonDiv.classList.add('active');
-        }
-        else
-        {
-          this._buttonDiv.classList.remove('active');
-        }
-    }
-
-    _populateHtml() {
-        let innerHTML = this.innerHTML;
-        this.innerHTML = '';
-
-        this.appendChild(liTemplate.content.cloneNode(true));
-        this._buttonDiv = this.querySelector('.button');
-        this._link = this.querySelector('a');
-        
-        this._buttonDiv.innerHTML = innerHTML;
-
-        this._upgradeProperty('active');
-        this._upgradeProperty('href');
-    }
-
-    set href(value) {
-        this.setAttribute('href', value);
-        this._link.setAttribute('href', value);
-    }
-  
-    get href() {
-        return this.hasAttribute('active');
-    }
-
-    set active(value) {
-        value = Boolean(value);
-        if (value)
-        {
-          this.setAttribute('active', '');
-        }
-        else
-        {
-          this.removeAttribute('active');
-        }
-    }
-  
-    get active() {
-        return this.hasAttribute('active');
-    }
-
-    _upgradeProperty(prop) {
-        if (this.hasOwnProperty(prop)) {
-            let value = this[prop];
-            delete this[prop];
-            this[prop] = value;
-        }
-    }
-}
-
-customElements.define("collapsible-nav-li", CollapsibleNavLi);

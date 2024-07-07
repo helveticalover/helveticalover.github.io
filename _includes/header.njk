@@ -3,9 +3,28 @@
 collapsible-nav:not(:defined) {
   display: none;
 }
+collapsible-nav a {
+    display: inline-block;
+    margin: 4px 2px;
+}
+collapsible-nav .button {
+    padding: 6px 18px;
+}
+@media only screen and (max-width: 768px) {
+    collapsible-nav .button {
+        border-radius: 0px;
+    }
+    collapsible-nav a {
+        margin: 4px 0px;
+        width: 100%;
+    }
+}
 </style>
-<collapsible-nav>
-<collapsible-nav-li>Test</collapsible-nav-li>
+<collapsible-nav collapse-width="768">
+  <a href="{{ '/projects' | url }}"><div class="button {% if currentPage == "projects" %}active{% endif %}">Projects</div></a>
+  <a href="{{ '/illustrations' | url }}"><div class="button {% if currentPage == "illustrations" %}active{% endif %}">Illustrations</div></a>
+  <a href="{{ '/videos' | url }}"><div class="button {% if currentPage == "videos" %}active{% endif %}">Videos</div></a>
+  <a href="{{ '/about-me#about-me' | url }}"><div class="button {% if currentPage == "about-me" %}active{% endif %}">About Me</div></a>
 </collapsible-nav>
 
 {# <script>
