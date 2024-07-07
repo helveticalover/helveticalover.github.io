@@ -3,6 +3,28 @@
 collapsible-nav:not(:defined) {
   display: none;
 }
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.title>div {
+    display: inline-flex;
+    align-items: baseline;
+    margin: 10px 0px;
+}
+.title>div:hover {
+    color: var(--background-color-major);
+    transition: color 0.25s linear;
+}
+.title .lower {
+    font-size: var(--title-lower-font-size);
+    font-weight: 600;
+}
+.title .cap {
+    font-size: var(--title-upper-font-size);
+    font-weight: 600;
+}
 collapsible-nav a {
     display: inline-block;
     margin: 4px 2px;
@@ -11,58 +33,33 @@ collapsible-nav .button {
     padding: 6px 18px;
 }
 @media only screen and (max-width: 768px) {
+    .title>div {
+        display: inline-flex;
+        align-items: baseline;
+        margin: 0px;
+    }
     collapsible-nav .button {
         border-radius: 0px;
     }
-    collapsible-nav a {
+    collapsible-nav .nav-li, collapsible-nav .title-wrapper {
         margin: 4px 0px;
+    }
+    collapsible-nav .nav-li {
         width: 100%;
     }
 }
 </style>
 <collapsible-nav collapse-width="768">
-  <a href="{{ '/projects' | url }}"><div class="button {% if currentPage == "projects" %}active{% endif %}">Projects</div></a>
-  <a href="{{ '/illustrations' | url }}"><div class="button {% if currentPage == "illustrations" %}active{% endif %}">Illustrations</div></a>
-  <a href="{{ '/videos' | url }}"><div class="button {% if currentPage == "videos" %}active{% endif %}">Videos</div></a>
-  <a href="{{ '/about-me#about-me' | url }}"><div class="button {% if currentPage == "about-me" %}active{% endif %}">About Me</div></a>
+  <a class="title-wrapper" href="{{ '/projects' | url }}" slot="title"><div class="title">
+      <div>
+          <span class="cap">T</span>
+          <span class="lower">IFFANY</span>
+          <span class="cap">&nbsp;L</span>
+          <span class="lower">I</span>
+      </div>
+    </div></a>
+  <a class="nav-li" href="{{ '/projects' | url }}"><div class="button {% if currentPage == "projects" %}active{% endif %}">Projects</div></a>
+  <a class="nav-li" href="{{ '/illustrations' | url }}"><div class="button {% if currentPage == "illustrations" %}active{% endif %}">Illustrations</div></a>
+  <a class="nav-li" href="{{ '/videos' | url }}"><div class="button {% if currentPage == "videos" %}active{% endif %}">Videos</div></a>
+  <a class="nav-li" href="{{ '/about-me#about-me' | url }}"><div class="button {% if currentPage == "about-me" %}active{% endif %}">About Me</div></a>
 </collapsible-nav>
-
-{# <script>
-  var prevScrollPos = window.pageYOffset;
-  window.onscroll = function() {
-    let diff = window.pageYOffset - prevScrollPos;
-    if (diff < -5 || window.pageYOffset < 44) {
-      document.getElementById("navbar").style.top = "0px";
-    } else if (diff > 0) {
-      document.getElementById("navbar").style.top = "-44px";
-      document.getElementById("id_nav-collapsible").checked = false;
-    }
-    prevScrollPos = window.pageYOffset;
-  }
-</script>
-<div class="header" id="navbar">
-    <nav class="center">
-      <input id="id_nav-collapsible" class="mobile-expand" type="checkbox">
-      <div class="banner">
-        <a href="{{ '/projects' | url }}"><div class="title">
-            <div>
-                <span class="cap">T</span>
-                <span class="lower">IFFANY</span>
-                <span class="cap">&nbsp;L</span>
-                <span class="lower">I</span>
-            </div>
-        </div></a>
-        <div style="width: 100%;">
-          <label for="id_nav-collapsible" class="mobile-expand-lbl social-icon" data-target="id_nav">{% include "svg/menu.svg" %}</label>
-        </div>
-      </div>
-      <div id="mobile-expand-content">
-        <ul class="nav" id="id_nav">
-          <li><a href="{{ '/projects' | url }}"><div class="button {% if currentPage == "projects" %}active{% endif %}">Projects</div></a></li>
-          <li><a href="{{ '/illustrations' | url }}"><div class="button {% if currentPage == "illustrations" %}active{% endif %}">Illustrations</div></a></li>
-          <li><a href="{{ '/videos' | url }}"><div class="button {% if currentPage == "videos" %}active{% endif %}">Videos</div></a></li>
-          <li><a href="{{ '/about-me#about-me' | url }}"><div class="button {% if currentPage == "about-me" %}active{% endif %}">About Me</div></a></li>
-        </ul>
-      </div>
-    </nav>
-</div> #}

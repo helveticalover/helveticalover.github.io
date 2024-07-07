@@ -13,7 +13,7 @@ template.innerHTML =
     display: flex;
     flex-direction: column;
     z-index: 2;
-    background-color: var(--website-background-color);
+    background-color: var(--header-background-color, rgba(0, 0, 0, 0));
     transition: top .25s ease-in-out;
 }
 .mobile-expand {
@@ -25,7 +25,7 @@ template.innerHTML =
     transition: all 0.25s ease-out;
 }
 .mobile-expand-lbl:hover {
-    color: var(--background-color-major);
+    color: var(--nav-icon-color-hover);
 }
 #mobile-expand-content {
     max-height: auto;
@@ -163,7 +163,7 @@ class CollapsibleNav extends HTMLElement {
         // TODO: need to not hardcode this!!!
           this._navRoot.style.top = "0px";
         } else if (diff > 0) {
-          this._navRoot.style.top = "-44px";
+          this._navRoot.style.top = "-46px";
           this._navCollapsible.checked = false;
         }
         this._prevScrollPosition = window.scrollY;
