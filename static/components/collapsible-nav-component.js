@@ -105,7 +105,7 @@ nav .button {
 </style>
 <div class="header">
     <nav class="center">
-      <input class="mobile-expand" type="checkbox">
+      <input id="id_nav-collapsible" class="mobile-expand" type="checkbox">
       <div class="banner">
         <slot name="title">Title</slot>
         <div style="width: 100%;">
@@ -118,10 +118,15 @@ nav .button {
       </div>
       <div id="mobile-expand-content">
         <ul class="nav" id="id_nav">
+        <slot></slot>
         </ul>
       </div>
     </nav>
 </div>`
+
+const liTemplate = document.createElement('template');
+liTemplate.innerHTML =
+`<li><a><div class="button"></div></a></li>`;
 
 class CollapsibleNav extends HTMLElement {
     constructor() {
@@ -153,7 +158,9 @@ class CollapsibleNav extends HTMLElement {
 
     _populateNav() {
         let lis = Array.from(this.querySelectorAll('collapsible-nav-li'));
-        
+        lis.forEach((li) => {
+            li._populateHtml();
+        });
     }
 
     _onScroll() {
@@ -172,27 +179,40 @@ class CollapsibleNav extends HTMLElement {
 
 customElements.define("collapsible-nav", CollapsibleNav);
 
-const liTemplate = document.createElement('template');
-liTemplate.innerHTML =
-`<li><a><div class="button" part="button"><slot></slot></div></a></li>`;
-
 class CollapsibleNavLi extends HTMLElement {
+    static observedAttributes = ["href", "active"];
+
     constructor() {
         super();
     }
 
-    // connectedCallback() {
-        // TODO: does this work for slots?
-        // if (this.parentElement instanceof CollapsibleNavComponent)
-        // {
-        //     this._populateHtml();
-        // }
-    // }
+    attributeChangedCallback() {
+        if (!this._buttonDiv || !this._link)
+        {
+            return;
+        }
+
+        this._link.href = href;
+
+        if (active)
+        {
+          this._buttonDiv.classList.add('active');
+        }
+        else
+        {
+          this._buttonDiv.classList.remove('active');
+        }
+    }
 
     _populateHtml() {
+        let innerHTML = this.innerHTML;
+        this.innerHTML = '';
+
         this.appendChild(liTemplate.content.cloneNode(true));
         this._buttonDiv = this.querySelector('.button');
         this._link = this.querySelector('a');
+        
+        this._buttonDiv.innerHTML = innerHTML;
 
         this._upgradeProperty('active');
         this._upgradeProperty('href');
@@ -212,12 +232,10 @@ class CollapsibleNavLi extends HTMLElement {
         if (value)
         {
           this.setAttribute('active', '');
-          this._buttonDiv.classList.add('active');
         }
         else
         {
           this.removeAttribute('active');
-          this._buttonDiv.classList.remove('active');
         }
     }
   
