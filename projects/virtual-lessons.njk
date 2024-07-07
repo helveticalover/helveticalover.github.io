@@ -24,7 +24,6 @@ metaDescription: A web framework for creating online C++ lessons for Carnegie Me
 {% include "titleText.njk" %}
 </div>
 
-{% include "modal.njk" %}
 {% macro src(img)%}{{ img.src }}{% endmacro %}
 {% macro alt(img) %}{{ img.alt }}{% endmacro %}
 {% macro overlay(img) %}{% endmacro %}
@@ -34,3 +33,4 @@ metaDescription: A web framework for creating online C++ lessons for Carnegie Me
 <div class="full-width-on-mobile center">
 {% include "gallery.njk" %}
 </div>
+{% include "modal.njk" %}
