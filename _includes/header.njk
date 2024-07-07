@@ -1,4 +1,12 @@
-<script>
+<script async src="{{ "/static/components/collapsible-nav-component.js" | url }}"></script>
+<style>
+collapsible-nav:not(:defined) {
+  display: none;
+}
+</style>
+<collapsible-nav></collapsible-nav>
+
+{# <script>
   var prevScrollPos = window.pageYOffset;
   window.onscroll = function() {
     let diff = window.pageYOffset - prevScrollPos;
@@ -36,4 +44,4 @@
         </ul>
       </div>
     </nav>
-</div>
+</div> #}

@@ -10,11 +10,6 @@ template.innerHTML =
     background-color: var(--website-background-color);
     transition: top .25s ease-in-out;
 }
-.title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .mobile-expand {
     display: none;
 }
@@ -108,15 +103,11 @@ nav .button {
     }
 }
 </style>
-<div class="header" id="navbar">
+<div class="header">
     <nav class="center">
-      <input id="id_nav-collapsible" class="mobile-expand" type="checkbox">
+      <input class="mobile-expand" type="checkbox">
       <div class="banner">
-        <a href="{{ '/projects' | url }}"><div class="title">
-            <slot name="title">
-                Title
-            </slot>
-        </div></a>
+        <slot name="title">Title</slot>
         <div style="width: 100%;">
           <label for="id_nav-collapsible" class="mobile-expand-lbl" data-target="id_nav">
             <slot name="nav-icon" class="menu-icon">
@@ -132,7 +123,7 @@ nav .button {
     </nav>
 </div>`
 
-class CollapsibleNavComponent extends HTMLElement {
+class CollapsibleNav extends HTMLElement {
     constructor() {
         super();
 
@@ -140,6 +131,9 @@ class CollapsibleNavComponent extends HTMLElement {
 
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this._navRoot = this.shadowRoot.querySelector('.header');
+        this._navCollapsible = this.shadowRoot.querySelector('.mobile-expand');
 
         Promise.all([
             customElements.whenDefined('collapsible-nav-li'),
@@ -163,16 +157,81 @@ class CollapsibleNavComponent extends HTMLElement {
     }
 
     _onScroll() {
-        let diff = window.scrollY - prevScrollPos;
+        let diff = window.scrollY - this._prevScrollPosition;
+        console.log(window.scrollY);
         if (diff < -5 || window.scrollY < 44) {
         // TODO: need to not hardcode this!!!
-          document.getElementById("navbar").style.top = "0px";
+          this._navRoot.style.top = "0px";
         } else if (diff > 0) {
-          document.getElementById("navbar").style.top = "-44px";
-          document.getElementById("id_nav-collapsible").checked = false;
+          this._navRoot.style.top = "-44px";
+          this._navCollapsible.checked = false;
         }
-        prevScrollPos = window.pageYOffset;
+        this._prevScrollPosition = window.scrollY;
     }
 }
 
 customElements.define("collapsible-nav", CollapsibleNav);
+
+const liTemplate = document.createElement('template');
+liTemplate.innerHTML =
+`<li><a><div class="button" part="button"><slot></slot></div></a></li>`;
+
+class CollapsibleNavLi extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    // connectedCallback() {
+        // TODO: does this work for slots?
+        // if (this.parentElement instanceof CollapsibleNavComponent)
+        // {
+        //     this._populateHtml();
+        // }
+    // }
+
+    _populateHtml() {
+        this.appendChild(liTemplate.content.cloneNode(true));
+        this._buttonDiv = this.querySelector('.button');
+        this._link = this.querySelector('a');
+
+        this._upgradeProperty('active');
+        this._upgradeProperty('href');
+    }
+
+    set href(value) {
+        this.setAttribute('href', value);
+        this._link.setAttribute('href', value);
+    }
+  
+    get href() {
+        return this.hasAttribute('active');
+    }
+
+    set active(value) {
+        value = Boolean(value);
+        if (value)
+        {
+          this.setAttribute('active', '');
+          this._buttonDiv.classList.add('active');
+        }
+        else
+        {
+          this.removeAttribute('active');
+          this._buttonDiv.classList.remove('active');
+        }
+    }
+  
+    get active() {
+        return this.hasAttribute('active');
+    }
+
+    _upgradeProperty(prop) {
+        if (this.hasOwnProperty(prop)) {
+            let value = this[prop];
+            delete this[prop];
+            this[prop] = value;
+        }
+    }
+}
+
+customElements.define("collapsible-nav-li", CollapsibleNavLi);
