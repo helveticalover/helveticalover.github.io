@@ -9,6 +9,8 @@
     --gallery-margin-top: 0px;
     --title-lower-font-size: 26.5pt;
     --title-upper-font-size: 28pt;
+    --header-background-color: var(--website-background-color);
+    --nav-icon-color-hover: var(--background-color-major);
 
     --website-background-color: rgb(255, 253, 250);
     --background-color-major: hsl(0, 0%, 65%);
