@@ -159,7 +159,6 @@ class CollapsibleNav extends HTMLElement {
 
     _onScroll() {
         let diff = window.scrollY - this._prevScrollPosition;
-        console.log(window.scrollY);
         if (diff < -5 || window.scrollY < 44) {
         // TODO: need to not hardcode this!!!
           this._navRoot.style.top = "0px";
