@@ -1,4 +1,41 @@
-<div class="gallery" id="id_gallery">
+<script language="javascript">
+    {% include "components/gallery-component.js" %}
+</script>
+<style>
+horizontal-fill-gallery:not(:defined) {
+  display: none;
+}
+horizontal-fill-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: var(--gallery-margin-top);
+  margin-bottom: var(--gallery-margin-top);
+  margin-left: var(--gallery-margin-left);
+  margin-right: var(--gallery-margin-left);
+}
+horizontal-fill-gallery .media-wrapper {
+  display: block;
+  padding: 0;
+}
+horizontal-fill-gallery img, horizontal-fill-gallery iframe, horizontal-fill-gallery lite-vimeo {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+horizontal-fill-gallery .media-wrapper {
+  position: relative;
+}
+horizontal-fill-gallery .media-wrapper .media-overlay {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+</style>
+
+<horizontal-fill-gallery {% if targetHeight %}target-height="{{ targetHeight }}"{% endif %}>
     {%- for dat in data -%}
     {% set tempSrc %}{{ src(dat) }}{% endset %}
     {% set tempAlt %}{{ alt(dat) }}{% endset %}
@@ -10,14 +47,4 @@
     {% endmedia %}
 
     {%- endfor -%}
-</div>
-{% if initGallery != true %}
-<style>
-    {% include "css/gallery.css" %}
-</style>
-<script language="javascript">
-    {% include "js/gallery.js" %}
-    const gallery = new Gallery({{ targetHeight }});
-    gallery.sizeGalleries();
-</script>
-{% endif %}
+</horizontal-fill-gallery>
