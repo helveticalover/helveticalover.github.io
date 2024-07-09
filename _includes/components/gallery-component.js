@@ -14,10 +14,10 @@ class Gallery extends HTMLElement {
 
     this._targetHeight = 500;
     this._lastRowAllowance = 200;
+    this._galleryItems = Array();
   }
 
   connectedCallback() {
-    this._sizeImages();
     this._resizeObserver.observe(this);
   }
 
@@ -30,15 +30,35 @@ class Gallery extends HTMLElement {
     if (!isNaN(newTargetHeight))
     {
       this._targetHeight = newTargetHeight;
-      this._sizeImages();
+      this._sizeGalleryItems();
     }
   }
 
-  _onResize() {
-    this._sizeImages();
+  notifyItemChanged() {
+    this._cacheGalleryItems();
   }
 
-  _sizeImages()
+  _onResize() {
+    this._sizeGalleryItems();
+  }
+
+  _cacheGalleryItems() {
+    this._galleryItems = Array();
+    const items = this.children;
+    for (const item of items)
+    {
+        if (item.tagName === 'HORIZONTAL-FILL-GALLERY-ITEM')
+            {
+                this._galleryItems.push({
+                    wrapper: item,
+                    media: item.querySelector('[data-width][data-height]'),
+                });
+            }
+    }
+    this._sizeGalleryItems();
+  }
+
+  _sizeGalleryItems()
   {
       let rect = this.getBoundingClientRect();
       let R;
@@ -59,46 +79,46 @@ class Gallery extends HTMLElement {
       let dat = sumr[sumr.length - 1];
 
       let deviation = Number.MAX_VALUE;
-      let wrappers = this.querySelectorAll("horizontal-fill-gallery-item");
-      for (let wrapper of wrappers)
-      {
-          let md = wrapper.querySelector("[data-width][data-height]");
-          let h = md.dataset.height;
-          let w = md.dataset.width;
-          let w_h = w / h;
 
-          // Try add image to existing row
-          dat.sum += w_h;
-          dat.media.push({
-              content: md,
-              wrapper: wrapper,
-          });
-          this._calculateScaledRows(sumr, R);
+      this._galleryItems.forEach((item) => {
+        const wrapper = item.wrapper;
+        const md = item.media;
+        const h = md.dataset.height;
+        const w = md.dataset.width;
+        const w_h = w / h;
 
-          let samples = sumr.map((dat) => dat.scaledHeight);
-          let newDeviation = this._getDeviation(samples, this._targetHeight);
+        // Try add image to existing row
+        dat.sum += w_h;
+        dat.media.push({
+            content: md,
+            wrapper: wrapper,
+        });
+        this._calculateScaledRows(sumr, R);
 
-          // If adding image to row increases deviation, add it to new row
-          if (newDeviation > deviation)
-          {
-              dat.sum -= w_h;
-              dat.media.pop();
+        let samples = sumr.map((dat) => dat.scaledHeight);
+        let newDeviation = this._getDeviation(samples, this._targetHeight);
 
-              dat = {};
-              dat.sum = w_h;
-              dat.media = [{
-                  content: md,
-                  wrapper: wrapper,
-              }];
-              sumr.push(dat);
+        // If adding image to row increases deviation, add it to new row
+        if (newDeviation > deviation)
+        {
+            dat.sum -= w_h;
+            dat.media.pop();
 
-              this._calculateScaledRows(sumr, R);
-              samples = sumr.map((dat) => dat.scaledHeight);
-              newDeviation = this._getDeviation(samples, this._targetHeight);
-          }
+            dat = {};
+            dat.sum = w_h;
+            dat.media = [{
+                content: md,
+                wrapper: wrapper,
+            }];
+            sumr.push(dat);
 
-          deviation = newDeviation;
-      }
+            this._calculateScaledRows(sumr, R);
+            samples = sumr.map((dat) => dat.scaledHeight);
+            newDeviation = this._getDeviation(samples, this._targetHeight);
+        }
+
+        deviation = newDeviation;
+      });
 
       if (dat.scaledHeight - this._targetHeight > this._lastRowAllowance)
       {
@@ -203,6 +223,25 @@ customElements.define('horizontal-fill-gallery', Gallery);
 class GalleryItem extends HTMLElement {
     constructor() {
         super();
+    }
+
+    connectedCallback() {
+        if (this.parentElement)
+        {
+            if (this.parentElement.tagName === 'HORIZONTAL-FILL-GALLERY')
+            {
+                this._parent = this.parentElement;
+                this._parent.notifyItemChanged();
+            }
+        }
+    }
+
+    disconnectedCallback() {
+        if (this._parent)
+        {
+            this._parent.notifyItemChanged();
+            this._parent = undefined;
+        }
     }
 }
 
