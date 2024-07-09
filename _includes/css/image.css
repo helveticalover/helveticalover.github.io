@@ -1,7 +1,7 @@
 .media-wrapper {
     display: grid;
 }
-.media-wrapper:hover img {
+.media-wrapper:hover>picture>img {
     box-shadow: 1px 1px 10px var(--shadow-color-highlighted);
 }
 .media-wrapper>.media-overlay {
@@ -12,7 +12,7 @@
     z-index: 1;
     overflow: hidden;
 }
-.media-wrapper picture {
+.media-wrapper>picture {
     grid-column: 1;
     grid-row: 1;
 }

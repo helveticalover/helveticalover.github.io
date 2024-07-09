@@ -103,8 +103,7 @@ module.exports = function(config) {
 				 data-sizes="${srcset["sizes"]}"` : ``
 			}>`;
 
-		const img = `<img 
-			${ lazy ? `class="lazy"` : `` }
+		const img = `<img class="${ lazy ? `lazy` : `` }"
 			alt="${alt}"
 			src="${srcUrl}"
 			data-src="${srcUrl}"
@@ -119,24 +118,21 @@ module.exports = function(config) {
 
 		wrapperFields = wrapperFields ? wrapperFields : "";
 	
-		return `<a ${wrapperFields} 
+		return `<a class="media-wrapper" ${wrapperFields} 
 			data-modalSrc="${config.getFilter("url")(largestSrc.url)}"
 			data-modalAlt="${alt}"
 			data-modalTarget="modal">
-			<div class="media-wrapper">
 			<div class="media-overlay">
 				${content}
 			</div>
 			<picture>
 				${source}
 				${img}
-			</picture>
-		</div></a>`;
+			</picture></a>`;
 	};
 
 	let embedShortcode = function (src, alt, lazy = true) {
-		return `<div class="media-wrapper">
-		<iframe 
+		return `<iframe 
 		${ lazy ? 'class="lazy"' : '' }
 		data-src="${src}"
 		title="${alt}"
@@ -145,8 +141,7 @@ module.exports = function(config) {
 		width="640"
 		height="360"
 		data-width="640"
-		data-height="360"></iframe>
-		</div>`;
+		data-height="360"></iframe>`;
 	};
 
 	let vimeoShortcode = async function(videoId) {
@@ -160,7 +155,6 @@ module.exports = function(config) {
 		return `<style>
 		lite-vimeo#vimeo${videoId} { background-image: url('${config.getFilter("url")(thumbnail.url)}') !important; }
 		</style>
-		<div class="media-wrapper">
 		<lite-vimeo
 		videoid="${ videoId }"
 		width="640"
@@ -169,8 +163,7 @@ module.exports = function(config) {
 		data-height="360"
 		id="vimeo${videoId}">
 			<div class="ltv-playbtn"></div>
-		</lite-vimeo>
-		</div>`;
+		</lite-vimeo>`;
 	};
 
 	config.addPairedAsyncShortcode("image", imageShortcode);

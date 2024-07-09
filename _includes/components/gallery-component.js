@@ -59,10 +59,10 @@ class Gallery extends HTMLElement {
       let dat = sumr[sumr.length - 1];
 
       let deviation = Number.MAX_VALUE;
-      let wrappers = this.querySelectorAll(".media-wrapper");
+      let wrappers = this.querySelectorAll("horizontal-fill-gallery-item");
       for (let wrapper of wrappers)
       {
-          let md = wrapper.querySelector("picture>img, iframe, lite-vimeo");
+          let md = wrapper.querySelector("[data-width][data-height]");
           let h = md.dataset.height;
           let w = md.dataset.width;
           let w_h = w / h;
@@ -199,4 +199,13 @@ class Gallery extends HTMLElement {
 }
 
 customElements.define('horizontal-fill-gallery', Gallery);
+
+class GalleryItem extends HTMLElement {
+    constructor() {
+        super();
+    }
+}
+
+customElements.define('horizontal-fill-gallery-item', GalleryItem);
+
 })();

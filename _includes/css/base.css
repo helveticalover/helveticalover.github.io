@@ -132,7 +132,7 @@ p {
     max-width: unset;
     max-height: unset;
 }
-.gallery {
+horizontal-fill-gallery {
     margin-bottom: 50px;
 }
 
@@ -165,7 +165,7 @@ p {
         margin-right: auto;
         justify-content: center;
     }
-    .gallery {
+    horizontal-fill-gallery {
         justify-content: center;
     }
     .hide-on-mobile {
