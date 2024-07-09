@@ -218,5 +218,9 @@ module.exports = function(config) {
 		return `${d.getFullYear()}`;
 	});
 
-	return {};
+	return {
+		dir: {
+			input: "src",
+		}
+	};
 }
