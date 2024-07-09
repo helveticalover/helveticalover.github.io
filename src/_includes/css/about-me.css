@@ -1,9 +1,3 @@
-#about-me .right>p {
-    margin-bottom: 30px;
-}
-#about-me .left {
-    max-width: 40%;
-}
 #resume {
     position: relative;
     min-height: 100vh;
@@ -16,19 +10,25 @@
 #resume>div>#resume-wrapper {
     overflow: hidden;
 }
+#about-me {
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);  
+}
+#alternate-img {
+    display: none;
+}
+@media only screen and (max-width: 1000px) {
+    #about-me {
+        bottom: 0;
+        top: unset;
+        transform: unset;
+    }
+}
 @media only screen and (max-width: 768px) {
-    #about-me .horizontal-container {
-        position: relative;
-        height: 100%;
-        overflow: hidden;
-    }
-    #about-me .left {
-        max-width: unset;
-    }
-    #about-me .left img {
-        width: 100%;
-        height: 100%;
-    }
     #resume {
         margin-top: 100px;
     }

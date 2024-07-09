@@ -124,6 +124,13 @@ p {
 .blog-wide, .blog-narrow, .horizontal-container>.left, .horizontal-container>.right {
     margin-bottom: 24px
 }
+.fill-children {
+    display: grid;
+}
+.fill-children>* {
+    grid-row: 1;
+    grid-column: 1;
+}
 .hide-on-desktop {
     display: none;
 }
@@ -146,8 +153,7 @@ horizontal-fill-gallery {
         width: 100%;
     }
     .horizontal-container>.right {
-        padding-left: 0px;
-        width: 100%
+        padding: 0px 10px;
     }
 }
 

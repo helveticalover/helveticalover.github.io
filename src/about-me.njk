@@ -10,26 +10,28 @@ metaDescription: Tiffany Li is a Carnegie Mellon University alumna who specializ
 <style>
 {% include "css/about-me.css" %}
 </style>
-<div id="about-me-wrapper" class="page-card blog-body">
+<div id="about-me-wrapper" class="page-card fill-children">
+    <div>
     {% set textContent %}
-    {% set description %}
-        <p>I am an interdiscplinary software engineer who makes games and interactive experiences.</p>
-    {% endset %}
-    {% set socialsMargin = "6px" %}
-    {% set footer %}
-    <ul class="flex-nav responsive-flex" style="margin-top: 30px; max-width:400px;">
-        <li style="margin-bottom: 30px; margin-left: 0px;"><a href="#resume" style="align-items: center; display: inline-flex; height: 32px;"><div class="button major small">Resume</div></a></li>
-        <li><ul class="flex-nav responsive-flex">{% include "socials.njk" %}</li>
-    </ul>
-    <div style="position: relative; width: 100%; display: block;">
-        <div style="position: absolute; width: 100%; top: -100vh; bottom: 0; z-index: -1;" id="about-me"></div>
-    </div>
-    {% endset %}
+        {% set description %}
+            <p>I am an interdiscplinary software engineer who makes games and interactive experiences.</p>
+        {% endset %}
+        {% set socialsMargin = "6px" %}
+        {% set footer %}
+        <ul class="flex-nav responsive-flex" style="margin-top: 30px; max-width:400px;">
+            <li style="margin-bottom: 30px; margin-left: 0px;"><a href="#resume" style="align-items: center; display: inline-flex; height: 32px;"><div class="button major small">Resume</div></a></li>
+            <li><ul class="flex-nav responsive-flex">{% include "socials.njk" %}</ul></li>
+        </ul>
+        {% endset %}
 
-    {% include "titleText.njk" %}
+        {% include "titleText.njk" %}
     {% endset %}
 
     {% include "horizontalCard.njk" %}
+    </div>
+    <div style="position: relative; display: block; z-index: -1;">
+        <div id="about-me"></div>
+    </div>
 </div>
 
 <div id="resume" class="blog-body">
