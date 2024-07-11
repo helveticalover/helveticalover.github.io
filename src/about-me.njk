@@ -13,18 +13,15 @@ metaDescription: Tiffany Li is a Carnegie Mellon University alumna who specializ
 <div id="about-me-wrapper" class="page-card fill-children">
     <div>
     {% set textContent %}
-        {% set description %}
+        <div id="title-block">
+            <h1>TIFFANY LI</h1>
             <p>I am an interdiscplinary software engineer who makes games and interactive experiences.</p>
-        {% endset %}
-        {% set socialsMargin = "6px" %}
-        {% set footer %}
-        <ul class="flex-nav responsive-flex" style="margin-top: 30px; max-width:400px;">
-            <li style="margin-bottom: 30px; margin-left: 0px;"><a href="#resume" style="align-items: center; display: inline-flex; height: 32px;"><div class="button major small">Resume</div></a></li>
-            <li><ul class="flex-nav responsive-flex">{% include "socials.njk" %}</ul></li>
+        </div>
+        <ul id="socials-nav" class="flex-nav responsive-flex">
+            <li id="socials-nav-resume"><a href="#resume"><div class="button major small">Resume</div></a></li>
+            <li id="socials-nav-contact-button"><a href="#footer-socials"><div class="button major small">Contact</div></a></li>
+            <li id="socials-nav-contact"><ul class="flex-nav responsive-flex">{% include "socials.njk" %}</ul></li>
         </ul>
-        {% endset %}
-
-        {% include "titleText.njk" %}
     {% endset %}
 
     {% include "horizontalCard.njk" %}
